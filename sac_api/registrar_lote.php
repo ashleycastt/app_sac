@@ -8,6 +8,20 @@ $id_empleado = $_POST['id_empleado'];
 # cantidad enviada desde Flutter
 $cantidad = isset($_POST['cantidad']) ? intval($_POST['cantidad']) : 1;
 
+
+$fecha_actual = date('Y-m-d');
+$fecha_minima = date('Y-m-d', strtotime('+30 days'));
+
+if ($fecha < $fecha_minima) {
+    echo json_encode([
+        "success" => false,
+        "message" => "La fecha de caducidad debe ser mínimo 31 días mayor a hoy"
+    ]);
+    exit;
+}
+
+
+
 # Buscar si ya existe lote con mismo codigo y fecha
 
 $queryBuscar = "SELECT id_lote, cantidad
