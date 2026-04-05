@@ -58,22 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    String? usuarioGuardado = await storage.read(key: "usuario");
-    String? passwordGuardado = await storage.read(key: "password");
-
-    if (usuarioGuardado != null && passwordGuardado != null) {
-      if (usuario != usuarioGuardado || password != passwordGuardado) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Este dispositivo ya está vinculado a otro usuario"),
-          ),
-        );
-        return;
-      }
-    }
-
     try {
-      var url = Uri.parse("http://192.168.100.67/sac_api/login.php");
+      var url = Uri.parse("http://192.168.1.63/sac_api/login.php");
 
       var response = await http.post(
         url,
@@ -87,6 +73,24 @@ class _LoginScreenState extends State<LoginScreen> {
         String usuarioDB = data["usuario"];
         int idEmpleado = int.parse(data["id_empleado"].toString());
 
+        String? usuarioGuardado = await storage.read(key: "usuario");
+        String? passwordGuardado = await storage.read(key: "password");
+
+        // VALIDACIÓN DE DISPOSITIVO
+        if (usuarioGuardado != null && passwordGuardado != null) {
+          if (usuario != usuarioGuardado || password != passwordGuardado) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  "Este dispositivo ya está vinculado a otro usuario",
+                ),
+              ),
+            );
+            return;
+          }
+        }
+
+        // Guardar si es primer login
         if (usuarioGuardado == null && passwordGuardado == null) {
           await storage.write(key: "usuario", value: usuario);
           await storage.write(key: "password", value: password);

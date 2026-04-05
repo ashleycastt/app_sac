@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'registro_producto_screen.dart';
+import 'asignar_areas_screen.dart';
+import 'productos_caducar_screen.dart';
 
 class MenuScreen extends StatelessWidget {
   final String rol;
@@ -23,7 +25,7 @@ class MenuScreen extends StatelessWidget {
         elevation: 4,
         centerTitle: true,
         title: Text(
-          "Menú - $rol",
+          "Menú",
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -64,10 +66,25 @@ class MenuScreen extends StatelessWidget {
                   ),
                 );
               }),
-
-            menuButton(Icons.inventory, "Asignación de áreas", () {}),
-
-            menuButton(Icons.warning, "Productos por caducar", () {}),
+            if (rol == "lider" || rol == "encargado")
+              menuButton(Icons.inventory, "Asignación de áreas", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AsignarAreasScreen(),
+                  ),
+                );
+              }),
+            if (rol == "lider" || rol == "encargado" || rol == "colaborador")
+              menuButton(Icons.warning, "Lotes por caducar", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ProductosCaducarScreen(idEmpleado: idEmpleado),
+                  ),
+                );
+              }),
 
             if (rol == "lider")
               menuButton(
